@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="stylesheets/style_of_login_admin.css"/>
+    <title>Đăng Nhập & Đăng ký</title>
+</head>
+<body>
+<div class="container">
+    <div class="forms-container">
+        <div class="signin-signup">
+            <!--            Form của phần đăng nhập-->
+            <form class="sign-in-form">
+                <h2 class="title">Đăng nhập</h2>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Tên đăng nhập" name="dn_username_user" id="dn_username_user"/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Mật khẩu" name="dn_password_user" id="dn_password_user"/>
+                </div>
+                <div id="message0"></div>
+                    <button type="button" onclick="btnLogIn()" class="btn solid">Đăng nhập</button>
+                <p class="social-text">
+                    <a href="/loginAdmin">
+                        Đăng nhập Admin
+                    </a>
+                </p>
+                <div class="social-media">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </form>
+
+            <!--            Form của phần đăng ký-->
+            <form class="sign-up-form">
+                <h2 class="title">Đăng ký</h2>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Tên đăng nhập" name="dk_username_user" id="dk_username_user"/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-envelope"></i>
+                    <input type="text" placeholder="Tên đăng nhập" name="nameAccount_user" id="nameAccount_user"/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Mật khẩu" name="dk_password_user" id="dk_password_user"/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Nhập lại mật khẩu" name="dk_password_user1"
+                           id="dk_password_user1"/>
+                </div>
+                <div id="message"></div>
+                <button type="button" class="btn" onclick="btnRegister()">Đăng ký</button>
+                <p class="social-text"></p>
+                <div class="social-media">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="panels-container">
+        <div class="panel left-panel">
+            <div class="content">
+                <h3>hãy trở thành một trong số chúng tôi?</h3>
+                <p>
+                    Hãy đăng ký để trở thành, thành viên của cộng đồng chúng tôi!
+                </p>
+                <button class="btn transparent" id="sign-up-btn">
+                    Đăng ký
+                </button>
+            </div>
+            <img src="/img/log.svg" class="image" alt=""/>
+        </div>
+        <div class="panel right-panel">
+            <div class="content">
+                <h3>Bạn muốn chia sẽ ý tưởng của mình ?</h3>
+                <p>
+                    Hãy đăng nhập để tham gia các hoạt động sáng tạo của cộng đồng chúng tôi!
+                </p>
+                <button class="btn transparent" id="sign-in-btn">
+                    Đăng nhập
+                </button>
+            </div>
+            <img src="/img/register.svg" class="image" alt=""/>
+        </div>
+    </div>
+</div>
+
+<script src="/javascripts/app1.js"></script>
+<!--axios-->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!--Btn đăng ký-->
+<script>
+    const btnRegister = async () => {
+        let dk_username_user = document.getElementById("dk_username_user").value;
+        let nameAccount_user = document.getElementById("nameAccount_user").value;
+        let dk_password_user = document.getElementById("dk_password_user").value;
+        let dk_password_user1 = document.getElementById("dk_password_user1").value;
+        const formData1 = new FormData();
+        formData1.append("dk_username_user", dk_username_user);
+        formData1.append("nameAccount_user", nameAccount_user);
+        formData1.append("dk_password_user", dk_password_user);
+        formData1.append("dk_password_user1", dk_password_user1);
+        try {
+            const result = await axios.post(`/registerAccountUser`, formData1, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            const body = result.data;
+            let html = '';
+
+            if (body.msg === 'Important items must not be left blank') {
+                html += '<div style="color: red">Bạn không được bỏ trống các phần trên</div>';
+                document.getElementById("message").innerHTML = html;
+            }
+            if (body.msg === 'The two passwords are not the same') {
+                html += '<div style="color: red">Mật khẩu không trùng khớp</div>';
+                document.getElementById("message").innerHTML = html;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+</script>
+
+<!--Btn đăng nhập-->
+<script>
+    const btnLogIn = async () => {
+        const dn_username_user = document.getElementById("dn_username_user").value;
+        const dn_password_user = document.getElementById("dn_password_user").value;
+        const formData = new FormData();
+        formData.append("dn_username_user", dn_username_user);
+        formData.append("dn_password_user", dn_password_user);
+        const result = await axios.post(`/loginAccountUser`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        let html = '';
+        const body = result.data;
+        // const page_1 = 1;
+        if(body.msg === 'login success'){
+            const id_geted = body.rl[0].id;
+            window.open(`/homeUser?id_user=${id_geted}`, `_self`);
+        }
+        if (body.msg === 'account error') {
+            html += '<div style="color: red">Bạn cần phải điền đủ thông tin để đăng nhập</div>';
+            document.getElementById("message0").innerHTML = html;
+        }
+        if (body.msg === 'account error1') {
+            html += '<div style="color: red">Tài khoản hoặc mật khẩu không chính xác</div>';
+            document.getElementById("message0").innerHTML = html;
+        }
+
+    }
+</script>
+
+</body>
+</html>
